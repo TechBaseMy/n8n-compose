@@ -1,4 +1,5 @@
 # Build stage: Copy Node binaries from official images
+FROM node:16-alpine AS node16
 FROM node:18-alpine AS node18
 FROM node:21-alpine AS node21
 
@@ -10,11 +11,13 @@ USER root
 RUN apk add --no-cache bash
 
 # Copy Node.js binaries from official images
+COPY --from=node16 /usr/local /opt/node-16.20.2
 COPY --from=node18 /usr/local /opt/node-18.20.2
 COPY --from=node21 /usr/local /opt/node-21.7.2
 
 # Create version symlinks
-RUN ln -s /opt/node-18.20.2 /opt/node-v18 && \
+RUN ln -s /opt/node-16.20.2 /opt/node-v16 && \
+    ln -s /opt/node-18.20.2 /opt/node-v18 && \
     ln -s /opt/node-21.7.2 /opt/node-v21
 
 # Create initial symlink for current node (default to Node 22 - the base image version)
@@ -26,7 +29,8 @@ RUN mkdir -p /home/node/bin && \
 
 # Add switch-node script
 COPY switch-node.sh /usr/local/bin/switch-node
-RUN chmod +x /usr/local/bin/switch-node
+RUN chmod +x /usr/local/bin/switch-node && \
+    sed -i 's/\r$//' /usr/local/bin/switch-node
 
 USER node
 WORKDIR /home/node

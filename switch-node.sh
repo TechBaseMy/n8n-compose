@@ -1,9 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 version=$1
 if [ -z "$version" ]; then
   echo "Usage: . switch-node <version>"
   echo "Available versions:"
+  echo "  16 (Node.js v16.x)"
   echo "  18 (Node.js v18.x)"
   echo "  21 (Node.js v21.x)"
   echo "  22 (Node.js v22.x - default)"
@@ -12,6 +13,9 @@ fi
 
 # Map short version to path
 case "$version" in
+  16) 
+    TARGET="/opt/node-16.20.2"
+    ;;
   18) 
     TARGET="/opt/node-18.20.2"
     ;;
@@ -23,7 +27,7 @@ case "$version" in
     ;;
   *)
     echo "Unsupported version: $version"
-    echo "Supported versions: 18, 21, 22"
+    echo "Supported versions: 16, 18, 21, 22"
     return 1 2>/dev/null || exit 1
     ;;
 esac
