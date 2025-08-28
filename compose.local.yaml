@@ -14,6 +14,12 @@ services:
     volumes:
       - n8n_data:/home/node/.n8n
       - ./local-files:/files
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+        reservations:
+          memory: 1G
 
 volumes:
   n8n_data:
